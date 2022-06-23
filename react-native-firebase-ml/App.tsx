@@ -5,13 +5,12 @@ import ImagePicker from './components/camera/ImagePicker';
 export default function App() {
   return (
     <View style={styles.container}>
+      <StatusBar style="auto" />
       <ScrollView>
         <View>
           <Text>Title</Text>
         </View>
       </ScrollView>
-      {/* <Text>Open up App.tsx to start working on your app!</Text>
-      <StatusBar style="auto" /> */}
     </View>
   );
 }
