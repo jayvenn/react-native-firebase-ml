@@ -29,6 +29,14 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "plugin": [
+      [
+        "expo-image-picker",
+        {
+          "cameraPermission": "Take photo for ML processing."
+        }
+      ]
+    ]
   }
 }
