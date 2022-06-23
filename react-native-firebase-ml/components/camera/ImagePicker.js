@@ -17,3 +17,5 @@ function ImagePicker() {
         </View>
     );
 };
+
+export default ImagePicker;
