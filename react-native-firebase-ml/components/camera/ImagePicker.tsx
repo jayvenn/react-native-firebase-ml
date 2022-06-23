@@ -4,11 +4,11 @@ import { launchCameraAsync, useCameraPermissions, PermissionStatus } from 'expo-
 function ImagePicker() {
     const [cameraPermissionInformation, requestPermission] = useCameraPermissions();
     async function verifyPermissions() {
-        if (cameraPermissionInformation.status === PermissionStatus.UNDETERMINED) {
+        if (cameraPermissionInformation?.status === PermissionStatus.UNDETERMINED) {
             const permissionResponse = await requestPermission();
             return permissionResponse.granted;
         }
-        if (cameraPermissionInformation.status === PermissionStatus.DENIED) {
+        if (cameraPermissionInformation?.status === PermissionStatus.DENIED) {
             Alert.alert(
                 'Insufficient Permissions',
                 'You need to grant camera permissions for this app.'
