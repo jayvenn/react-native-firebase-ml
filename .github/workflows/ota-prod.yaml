@@ -1,0 +1,23 @@
+name: OTA Production
+
+on:
+  push:
+    branches: [ci/ota-prod]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
+        with:
+          node-version: 12.x
+      - uses: expo/expo-github-action@v5
+        with:
+          expo-version: 4.x
+          expo-token: ${{ secrets.EXPO_TOKEN }}
+      - name: Push updates to production app
+        run: |
+          set -e
+          yarn install
+          env=prod expo publish --release-channel prod

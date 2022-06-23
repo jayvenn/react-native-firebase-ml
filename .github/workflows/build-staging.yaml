@@ -1,0 +1,98 @@
+name: Build Staging
+
+on:
+  push:
+    branches: [ci/build-staging]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
+        with:
+          node-version: 12.x
+      - uses: expo/expo-github-action@v5
+        with:
+          expo-version: 4.x
+          expo-token: ${{ secrets.EXPO_TOKEN }}
+          expo-cache: true
+      - name: Build staging
+        run: |
+          set -e
+          APP_MANAGER_ID=634
+          BUNDLE_IDENTIFIER=com.media2359.pcf.reliefstaff.staging
+
+          # GET APP VERSION
+          APP_VERSION=`node app.version.js`
+          echo APP_VERSION=$APP_VERSION
+          echo
+
+          # BUILD APP
+          yarn build-staging --non-interactive | tee build.txt
+          echo
+
+          echo ******************************
+          echo DEPLOY IOS FILE TO APP MANAGER
+          echo ******************************
+          echo
+
+          # GET BUILD ID
+          IOS_BUILD_ID=`grep -o 'iOS.*builds\/.*' build.txt | sed 's/^.*\///'`
+          echo IOS_BUILD_ID=$IOS_BUILD_ID
+          echo
+
+          # GET FILE URL
+          npx eas-cli build:view $IOS_BUILD_ID | tee build.ios.txt
+          IOS_FILE_URL_1=`grep -o 'https://.*.ipa' build.ios.txt`
+          IOS_FILE_URL_2=`curl $IOS_FILE_URL_1`
+          curl $IOS_FILE_URL_2 --output build.ios.2.txt
+          IOS_FILE_URL=`grep -o '"https://[^"]*.ipa' build.ios.2.txt | sed 's/^"//'`
+          echo IOS_FILE_URL=$IOS_FILE_URL
+          echo
+
+          echo DOWNLOAD IOS FILE
+          curl $IOS_FILE_URL --output file.ipa
+          echo
+
+          echo UPLOAD IOS FILE
+          curl https://app.2359media.net/api/v1/apps/$APP_MANAGER_ID/versions \
+            -F binary="@file.ipa" \
+            -F api_token="${{ secrets.APP_MANAGER_TOKEN }}" \
+            -F platform="iOS" \
+            -F bundle_identifier="$BUNDLE_IDENTIFIER" \
+            -F description="${{ github.event.head_commit.message }}" \
+            -F version_number="iOS $APP_VERSION"
+          echo
+
+          echo **********************************
+          echo DEPLOY ANDROID FILE TO APP MANAGER
+          echo **********************************
+          echo
+
+          # GET BUILD ID
+          ANDROID_BUILD_ID=`grep -o 'Android.*builds\/.*' build.txt | sed 's/^.*\///'`
+          echo ANDROID_BUILD_ID=$ANDROID_BUILD_ID
+          echo
+
+          # GET FILE URL
+          npx eas-cli build:view $ANDROID_BUILD_ID | tee build.android.txt
+          ANDROID_FILE_URL_1=`grep -o 'https://.*.apk' build.android.txt`
+          ANDROID_FILE_URL_2=`curl $ANDROID_FILE_URL_1`
+          curl $ANDROID_FILE_URL_2 --output build.android.2.txt
+          ANDROID_FILE_URL=`grep -o '"https://[^"]*.apk' build.android.2.txt | sed 's/^"//'`
+          echo ANDROID_FILE_URL=$ANDROID_FILE_URL
+          echo
+
+          echo DOWNLOAD ANDROID FILE
+          curl $ANDROID_FILE_URL --output file.apk
+          echo
+
+          echo UPLOAD ANDROID FILE
+          curl https://app.2359media.net/api/v1/apps/$APP_MANAGER_ID/versions \
+            -F binary="@file.apk" \
+            -F api_token="${{ secrets.APP_MANAGER_TOKEN }}" \
+            -F platform="Android" \
+            -F description="${{ github.event.head_commit.message }}" \
+            -F version_number="Android $APP_VERSION"
+          echo
