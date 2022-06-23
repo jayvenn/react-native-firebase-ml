@@ -34,7 +34,8 @@
       [
         "expo-image-picker",
         {
-          "cameraPermission": "Take photo for ML processing."
+          "cameraPermission": "Take photo for ML processing.",
+          "photosPermission": "The app accesses your photos to let you share them with your friends."
         }
       ]
     ]
