@@ -1652,6 +1652,11 @@
     sudo-prompt "^9.0.0"
     wcwidth "^1.0.1"
 
+"@react-native-firebase/ml@^15.0.0":
+  version "15.0.0"
+  resolved "https://registry.yarnpkg.com/@react-native-firebase/ml/-/ml-15.0.0.tgz#6b7bde21155c6ef42f9f9a0cafb199d4932c4fe3"
+  integrity sha512-wHwHhE+4iEAg3ZIx3q4juEHYFe709YaZp6FOkPn+u8s7DyhlB4ib5e0GqyvniyTiInzG5LwxYR16JPGjxdNCTQ==
+
 "@react-native/assets@1.0.0":
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/@react-native/assets/-/assets-1.0.0.tgz#c6f9bf63d274bafc8e970628de24986b30a55c8e"
