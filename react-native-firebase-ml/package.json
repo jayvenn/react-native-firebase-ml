@@ -10,6 +10,7 @@
     "eject": "expo eject"
   },
   "dependencies": {
+    "@firebase/auth": "^0.20.4",
     "@google-cloud/vision": "^2.4.2",
     "@react-native-firebase/app": "^15.0.0",
     "@react-native-firebase/ml": "^15.0.0",
