@@ -6,7 +6,10 @@ export default function App() {
   return (
     <View style={styles.container}>
       <StatusBar style="auto" />
-      <View>
+      <View style={{
+        flex: 1,
+        width: '100%'
+      }}>
         <ImagePicker />
       </View>
     </View>
